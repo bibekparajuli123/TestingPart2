@@ -1,38 +1,45 @@
 package com.lcwd.test;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import java.util.Arrays;
+import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
+class AppTest {
+
+    private final File file = new File();
+
+    // Test for countWords
+    @Test
+    void testCountWords() {
+        assertEquals(4, file.countWords("This is a test"));
+        assertEquals(0, file.countWords(""));
+        assertEquals(0, file.countWords(null));
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
+    // Parameterized test for palindrome
+    @ParameterizedTest
+    @ValueSource(strings = {"madam", "racecar", "Level", "noon"})
+    void testIsPalindromeTrue(String word) {
+        assertTrue(file.isPalindrome(word));
     }
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+    @Test
+    void testIsPalindromeFalse() {
+        assertFalse(file.isPalindrome("hello"));
+    }
+
+    // Test for averageWordLength
+    @Test
+    void testAverageWordLength() {
+        assertEquals(4.0, file.averageWordLength(Arrays.asList("this", "test")));
+    }
+
+    @Test
+    void testAverageWordLengthThrowsException() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> file.averageWordLength(Arrays.asList()));
+        assertEquals("Word list cannot be null or empty", exception.getMessage());
     }
 }
